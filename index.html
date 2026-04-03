@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recheel Mag-ili — AI Automation Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --card: #13131c;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --accent: #7b5ef8;
+    --accent2: #a78bfa;
+    --teal: #2dd4bf;
+    --amber: #f59e0b;
+    --text: #f0eefd;
+    --muted: #8b8aa8;
+    --dim: #4a4966;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* GLOW ORBS */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb1 { width: 600px; height: 600px; background: rgba(123,94,248,0.12); top: -200px; left: -200px; }
+  .orb2 { width: 400px; height: 400px; background: rgba(45,212,191,0.08); bottom: 200px; right: -100px; }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 1.2rem 2rem;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .nav-logo span { color: var(--accent2); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent);
+    color: white !important;
+    padding: 0.4rem 1.1rem;
+    border-radius: 6px;
+    font-weight: 500 !important;
+  }
+  .nav-cta:hover { background: var(--accent2); color: var(--bg) !important; }
+
+  /* HERO */
+  .hero {
+    padding: 14rem 0 7rem;
+    text-align: center;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(123,94,248,0.15);
+    border: 1px solid rgba(123,94,248,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    margin-bottom: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+  }
+  h1 .line2 { color: var(--accent2); }
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: #8b6ff9; transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border2);
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+
+  /* TECH STACK TICKER */
+  .stack-section { padding: 3rem 0; overflow: hidden; }
+  .stack-label { text-align: center; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--dim); margin-bottom: 2rem; }
+  .ticker-wrap { overflow: hidden; }
+  .ticker {
+    display: flex; gap: 1.5rem;
+    animation: ticker-scroll 20s linear infinite;
+    width: max-content;
+  }
+  .ticker:hover { animation-play-state: paused; }
+  @keyframes ticker-scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .tech-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .tech-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-purple { background: var(--accent2); }
+  .dot-teal { background: var(--teal); }
+  .dot-amber { background: var(--amber); }
+  .dot-green { background: #4ade80; }
+  .dot-blue { background: #60a5fa; }
+
+  /* SECTION HEADER */
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent2);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+  .section-desc { color: var(--muted); max-width: 500px; margin: 0 auto; font-size: 1rem; }
+
+  /* PROJECTS */
+  .projects { padding: 6rem 0; }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .project-card:hover {
+    border-color: rgba(123,94,248,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .project-card.featured {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .project-img {
+    background: var(--bg3);
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card:not(.featured) .project-img { height: 220px; }
+  .project-img img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top;
+    opacity: 0.85;
+    transition: opacity 0.3s, transform 0.4s;
+  }
+  .project-card:hover .project-img img { opacity: 1; transform: scale(1.02); }
+  .img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(19,19,28,0.8));
+  }
+  .project-body { padding: 1.8rem; }
+  .project-tag {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+  }
+  .project-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+  }
+  .project-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+  .project-flow {
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .flow-step {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .flow-arrow { color: var(--dim); font-size: 0.7rem; }
+  .project-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    background: rgba(123,94,248,0.12);
+    border: 1px solid rgba(123,94,248,0.2);
+    color: var(--accent2);
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+  .tag.teal { background: rgba(45,212,191,0.1); border-color: rgba(45,212,191,0.2); color: var(--teal); }
+  .tag.amber { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.2); color: var(--amber); }
+
+  /* SKILLS */
+  .skills { padding: 6rem 0; background: var(--bg2); }
+  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: border-color 0.3s;
+  }
+  .skill-card:hover { border-color: rgba(255,255,255,0.15); }
+  .skill-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .icon-purple { background: rgba(123,94,248,0.15); }
+  .icon-teal { background: rgba(45,212,191,0.12); }
+  .icon-amber { background: rgba(245,158,11,0.12); }
+  .skill-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .skill-card p { color: var(--muted); font-size: 0.875rem; }
+  .skill-tools { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 1rem; }
+  .skill-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    color: var(--dim);
+  }
+  .learning-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    color: var(--amber);
+  }
+
+  /* WORKFLOW SECTION */
+  .workflow-section { padding: 6rem 0; }
+  .workflow-showcase {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  }
+  .wf-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .wf-card:hover { border-color: rgba(123,94,248,0.3); transform: translateY(-2px); }
+  .wf-img { height: 180px; overflow: hidden; background: var(--bg3); }
+  .wf-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0.9; }
+  .wf-info { padding: 1.4rem; }
+  .wf-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent2);
+    margin-bottom: 0.4rem;
+  }
+  .wf-info h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .wf-info p { color: var(--muted); font-size: 0.82rem; }
+
+  /* STATS */
+  .stats { padding: 5rem 0; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; }
+  .stat-item {
+    background: var(--card);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--accent2);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label { color: var(--muted); font-size: 0.85rem; }
+
+  /* ABOUT */
+  .about { padding: 6rem 0; background: var(--bg2); }
+  .about-inner {
+    display: grid; grid-template-columns: 1fr 1.5fr; gap: 5rem; align-items: center;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-card-main {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: white;
+  }
+  .about-card-main h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .about-card-main .role { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.5rem; }
+  .status-row { display: flex; align-items: center; gap: 8px; }
+  .status-dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; animation: pulse 2s infinite; }
+  .status-text { color: var(--teal); font-size: 0.82rem; }
+  .about-floating {
+    position: absolute;
+    bottom: -1.5rem; right: -1.5rem;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    font-size: 0.8rem;
+  }
+  .about-floating .fl-label { color: var(--dim); font-size: 0.7rem; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .about-floating .fl-tools { display: flex; gap: 6px; }
+  .fl-tool {
+    background: rgba(123,94,248,0.15);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    color: var(--accent2);
+  }
+  .about-content h2 { text-align: left; margin-bottom: 1.2rem; }
+  .about-content .section-tag { text-align: left; }
+  .about-content p { color: var(--muted); margin-bottom: 1rem; font-size: 0.95rem; }
+  .about-content .highlight { color: var(--text); font-weight: 500; }
+
+  /* CTA */
+  .cta-section {
+    padding: 6rem 0;
+    text-align: center;
+  }
+  .cta-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 4rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 300px;
+    background: rgba(123,94,248,0.1);
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .cta-box h2 { margin-bottom: 1rem; }
+  .cta-box p { color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; }
+  .contact-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .contact-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 0.65rem 1.2rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .contact-chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    color: var(--dim);
+    font-size: 0.8rem;
+  }
+  footer span { color: var(--accent2); }
+
+  @media (max-width: 768px) {
+    .projects-grid, .project-card.featured, .skills-grid, .workflow-showcase, .about-inner { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: span 1; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    h1 { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Recheel<span>.</span></div>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="nav-cta">Hire Me</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Open to Work · AI Automation & SaaS
+    </div>
+    <h1>
+      Building Smart<br>
+      <span class="line2">Automation Systems</span>
+    </h1>
+    <p class="hero-sub">
+      I design and deploy AI-powered workflows using GoHighLevel, n8n, and Make.com — helping businesses eliminate manual tasks and scale effortlessly.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View My Work →</a>
+      <a href="#contact" class="btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK TICKER -->
+<section class="stack-section">
+  <div class="stack-label">Tools & Platforms</div>
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <!-- First set -->
+      <div class="tech-chip"><div class="dot dot-purple"></div>GoHighLevel</div>
+      <div class="tech-chip"><div class="dot dot-teal"></div>n8n <span style="font-size:0.65rem;color:var(--amber);margin-left:4px;">Learning</span></div>
+      <div class="tech-chip"><div class="dot dot-blue"></div>Make.com <span style="font-size:0.65rem;color:var(--amber);margin-left:4px;">Learning</span></div>
+      <div class="tech-chip"><div class="dot dot-amber"></div>Claude AI</div>
+      <div class="tech-chip"><div class="dot dot-green"></div>Claude Code <span style="font-size:0.65rem;color:var(--amber);margin-left:4px;">Learning</span></div>
+      <div class="tech-chip"><div class="dot dot-purple"></div>Workflow Automation</div>
+      <div class="tech-chip"><div class="dot dot-teal"></div>CRM Integrations</div>
+      <div class="tech-chip"><div class="dot dot-blue"></div>Email Sequences</div>
+      <div class="tech-chip"><div class="dot dot-amber"></div>AI Prompting</div>
+      <div class="tech-chip"><div class="dot dot-green"></div>GHL Workflows</div>
+      <!-- Duplicate for seamless loop -->
+      <div class="tech-chip"><div class="dot dot-purple"></div>GoHighLevel</div>
+      <div class="tech-chip"><div class="dot dot-teal"></div>n8n <span style="font-size:0.65rem;color:var(--amber);margin-left:4px;">Learning</span></div>
+      <div class="tech-chip"><div class="dot dot-blue"></div>Make.com <span style="font-size:0.65rem;color:var(--amber);margin-left:4px;">Learning</span></div>
+      <div class="tech-chip"><div class="dot dot-amber"></div>Claude AI</div>
+      <div class="tech-chip"><div class="dot dot-green"></div>Claude Code <span style="font-size:0.65rem;color:var(--amber);margin-left:4px;">Learning</span></div>
+      <div class="tech-chip"><div class="dot dot-purple"></div>Workflow Automation</div>
+      <div class="tech-chip"><div class="dot dot-teal"></div>CRM Integrations</div>
+      <div class="tech-chip"><div class="dot dot-blue"></div>Email Sequences</div>
+      <div class="tech-chip"><div class="dot dot-amber"></div>AI Prompting</div>
+      <div class="tech-chip"><div class="dot dot-green"></div>GHL Workflows</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Featured Work</div>
+      <h2>Live Automation Projects</h2>
+      <p class="section-desc">Real GHL workflows I've built and deployed for fitness studios and e-commerce businesses.</p>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- Featured: VibeFit -->
+      <div class="project-card featured">
+        <div class="project-img">
+          <img src="Gym_workflow.png" alt="VibeFit Studio Workflow" />
+          <div class="img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <div class="project-tag">⚡ GHL Workflow · Fitness Studio</div>
+          <h3>VibeFit Studio — Lead Nurture Sequence</h3>
+          <p>Automated end-to-end lead follow-up for a fitness studio. When a prospect submits a form, the workflow immediately fires a personalized welcome email, waits 24 hours, then sends a follow-up — all without human intervention.</p>
+          <div class="project-flow">
+            <div class="flow-step">Form Submitted</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">First Email</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">Wait 1 Day</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">Email Follow Up</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">End</div>
+          </div>
+          <div class="project-tags">
+            <div class="tag">GHL Workflow</div>
+            <div class="tag teal">Email Automation</div>
+            <div class="tag amber">Lead Nurture</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retro Treasure -->
+      <div class="project-card">
+        <div class="project-img">
+          <img src="Retro_Treasure_workflow1.png" alt="Retro Treasure Workflow" />
+          <div class="img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <div class="project-tag">🏷️ GHL Workflow · E-commerce</div>
+          <h3>Retro Treasure — Form-to-Email Nurture</h3>
+          <p>Multi-step onboarding sequence triggered via custom forms. Tags contacts, sends confirmation, then drips emails over several days.</p>
+          <div class="project-flow">
+            <div class="flow-step">Form Trigger</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">Add Tag</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">Email Confirm</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">2-Day Drip</div>
+          </div>
+          <div class="project-tags">
+            <div class="tag">Contact Tagging</div>
+            <div class="tag teal">Drip Sequence</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social + AI Recipe -->
+      <div class="project-card">
+        <div class="project-img">
+          <img src="Ghl_social_planner.png" alt="Social Planner + AI" />
+          <div class="img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <div class="project-tag">🤖 GHL + AI · Social Media</div>
+          <h3>Recipe + AI Facebook Comment Workflow</h3>
+          <p>Combines GHL social planner with an AI workflow that responds to Facebook comments automatically using Claude for context-aware replies.</p>
+          <div class="project-flow">
+            <div class="flow-step">FB Comment</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">AI Processing</div>
+            <div class="flow-arrow">›</div>
+            <div class="flow-step">Auto Reply</div>
+          </div>
+          <div class="project-tags">
+            <div class="tag">AI Integration</div>
+            <div class="tag amber">Social Media</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXECUTION LOGS SHOWCASE -->
+<section class="workflow-section" id="results">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Proof of Results</div>
+      <h2>Workflows That Actually Run</h2>
+      <p class="section-desc">Execution logs proving real-world deployment — not just mockups.</p>
+    </div>
+    <div class="workflow-showcase">
+      <div class="wf-card">
+        <div class="wf-img">
+          <img src="Execution_Logs.png" alt="Execution Logs" />
+        </div>
+        <div class="wf-info">
+          <div class="wf-label">VibeFit Studio · Execution Log</div>
+          <h4>Successfully Executed Automation</h4>
+          <p>Live execution log showing the full contact journey: Added to Workflow → First Email → Wait → Follow Up → Finished. All steps executed successfully.</p>
+        </div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-img">
+          <img src="Ghl_social_planner.png" alt="GHL Workflow List" />
+        </div>
+        <div class="wf-info">
+          <div class="wf-label">GoHighLevel · 5 Active Workflows</div>
+          <h4>Multi-Client Workflow Management</h4>
+          <p>Managing 5 published workflows across multiple client accounts — VibeFit Studio, Retro Treasure, WorkflowGirlies Gym Trial, and more.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-num">5+</span>
+        <div class="stat-label">Live GHL Workflows</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3</span>
+        <div class="stat-label">Client Industries</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4</span>
+        <div class="stat-label">Tools in Stack</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">∞</span>
+        <div class="stat-label">Automatable Possibilities</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills" id="skills">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Capabilities</div>
+      <h2>What I Bring to the Table</h2>
+      <p class="section-desc">A growing stack of automation, AI, and development skills.</p>
+    </div>
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-icon icon-purple">⚙️</div>
+        <h4>GHL Workflow Builder</h4>
+        <p>Building complex automation sequences in GoHighLevel — triggers, waits, emails, tagging, and multi-branch logic.</p>
+        <div class="skill-tools">
+          <div class="skill-pill">Triggers</div>
+          <div class="skill-pill">Email Actions</div>
+          <div class="skill-pill">Wait Steps</div>
+          <div class="skill-pill">Contact Tags</div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon icon-teal">🔗</div>
+        <h4>n8n Automation</h4>
+        <p>Learning open-source workflow automation with n8n — connecting APIs, webhook triggers, and data transformations.</p>
+        <div class="skill-tools">
+          <div class="skill-pill">Webhooks</div>
+          <div class="skill-pill">API Nodes</div>
+          <div class="learning-badge">📚 Currently Learning</div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon icon-amber">⚡</div>
+        <h4>Make.com</h4>
+        <p>Exploring Make.com's visual scenario builder for connecting SaaS apps and automating complex multi-step processes.</p>
+        <div class="skill-tools">
+          <div class="skill-pill">Scenarios</div>
+          <div class="skill-pill">App Connections</div>
+          <div class="learning-badge">📚 Currently Learning</div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon icon-purple">🤖</div>
+        <h4>AI Integration</h4>
+        <p>Integrating Claude and other LLMs into workflows for intelligent, context-aware automation that responds like a human.</p>
+        <div class="skill-tools">
+          <div class="skill-pill">Claude API</div>
+          <div class="skill-pill">Prompt Design</div>
+          <div class="skill-pill">AI Responses</div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon icon-teal">💻</div>
+        <h4>Claude Code</h4>
+        <p>Learning to use Claude Code for AI-assisted software development — building scripts and tools to extend automation capabilities.</p>
+        <div class="skill-tools">
+          <div class="skill-pill">CLI Development</div>
+          <div class="learning-badge">📚 Currently Learning</div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon icon-amber">📊</div>
+        <h4>CRM & Sales Automation</h4>
+        <p>Configuring pipelines, contact management, and automated follow-up sequences that keep leads engaged without manual effort.</p>
+        <div class="skill-tools">
+          <div class="skill-pill">Pipeline Mgmt</div>
+          <div class="skill-pill">Lead Nurture</div>
+          <div class="skill-pill">Email Sequences</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-visual">
+        <div class="about-card-main">
+          <div class="avatar">RM</div>
+          <h3>Recheel Olanio Mag-ili</h3>
+          <div class="role">GoHighLevel · n8n · Make.com · Claude</div>
+          <div class="status-row">
+            <div class="status-dot"></div>
+            <div class="status-text">Available for freelance & full-time roles</div>
+          </div>
+        </div>
+        <div class="about-floating">
+          <div class="fl-label">Currently studying</div>
+          <div class="fl-tools">
+            <div class="fl-tool">n8n</div>
+            <div class="fl-tool">Make.com</div>
+            <div class="fl-tool">Claude Code</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <div class="section-tag">About Me</div>
+        <h2>Passionate About Making Businesses Run Smarter</h2>
+        <p>I'm an AI Automation specialist focused on helping businesses eliminate repetitive manual work through intelligent workflow design. My core expertise is in <span class="highlight">GoHighLevel</span>, where I've built and deployed live automation systems for fitness studios, e-commerce brands, and more.</p>
+        <p>I believe the best automations are ones you forget about — they just work. From the moment a lead fills in a form to their first purchase and beyond, I design systems that handle communication, tagging, and follow-up seamlessly.</p>
+        <p>I'm actively expanding my skill set: currently studying <span class="highlight">n8n</span> and <span class="highlight">Make.com</span> for deeper integrations, and exploring <span class="highlight">Claude Code</span> to bring AI-assisted development into my workflow toolkit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box">
+      <div class="section-tag">Let's Work Together</div>
+      <h2>Ready to Automate Your Business?</h2>
+      <p>Whether you need a custom GHL workflow, an AI integration, or an end-to-end automation system — let's build it together.</p>
+      <div class="contact-row">
+        <a href="mailto:vamagilirecheel@gmail.com" class="contact-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          vamagilirecheel@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/recheel-mag-ili-068367208" class="contact-chip" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn Profile
+        </a>
+        <a href="#projects" class="btn-primary">See My Work →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span>Recheel Olanio Mag-ili</span> · AI Automation Specialist · Open to opportunities</p>
+</footer>
+
+</body>
+</html>
